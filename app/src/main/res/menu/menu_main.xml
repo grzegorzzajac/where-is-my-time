@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.grzesiek.myapplication.MainActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="300"
+        android:title="Settings"
+        android:icon="@drawable/ic_more"
+        app:showAsAction="ifRoom"
+        ></item>
+    <item
+        android:id="@+id/action_statistics"
+        android:orderInCategory="200"
+        android:title="Statistics"
+        android:icon="@drawable/ic_pie_chart"
+        app:showAsAction="always"
+        ></item>
+    <item
+        android:id="@+id/action_add"
+        android:orderInCategory="100"
+        android:title="Add"
+        android:icon="@drawable/ic_plus"
+        app:showAsAction="always">
+    </item>
+</menu>
