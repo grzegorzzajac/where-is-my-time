@@ -1,12 +1,12 @@
 package com.example.grzesiek.myapplication;
 
 import android.graphics.Color;
+import android.support.design.widget.TabLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,9 +35,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder>{
         }
     }
 
-    List<Activity> activities;
+    List<Event> activities;
 
-    RVAdapter(List<Activity> persons){
+    RVAdapter(List<Event> persons){
         this.activities = persons;
     }
 
@@ -52,6 +52,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder>{
         PersonViewHolder pvh = new PersonViewHolder(v);
         return pvh;
     }
+
 
     @Override
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {

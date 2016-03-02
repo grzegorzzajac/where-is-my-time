@@ -1,9 +1,14 @@
 package com.example.grzesiek.myapplication;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,21 +16,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -46,18 +52,26 @@ public class MainActivity extends AppCompatActivity {
         categories.add(new Category("Preparing food", "#32CD32"));
         categories.add(new Category("Working", "#FFA500"));
 
-        List<Activity> activities  = new ArrayList<>();
-        activities.add(new Activity(categories.get(0), new Date(), new Date(), "#youtube"));
-        activities.add(new Activity(categories.get(1), new Date(), new Date(), "#dinner"));
-        activities.add(new Activity(categories.get(2), new Date(), new Date(), "#pwr"));
-        activities.add(new Activity(categories.get(1), new Date(), new Date(), "#youtube"));
-        activities.add(new Activity(categories.get(2), new Date(), new Date(), "#dinner"));
-        activities.add(new Activity(categories.get(0), new Date(), new Date(), "#pwr"));
-        activities.add(new Activity(categories.get(0), new Date(), new Date(), "#youtube"));
-        activities.add(new Activity(categories.get(2), new Date(), new Date(), "#dinner"));
-        activities.add(new Activity(categories.get(1), new Date(), new Date(), "#pwr"));
+        List<Event> events  = new ArrayList<>();
+        events.add(new Event(categories.get(0), new Date(), new Date(), "#youtube"));
+        events.add(new Event(categories.get(1), new Date(), new Date(), "#dinner"));
+        events.add(new Event(categories.get(2), new Date(), new Date(), "#pwr"));
+        events.add(new Event(categories.get(1), new Date(), new Date(), "#youtube"));
+        events.add(new Event(categories.get(2), new Date(), new Date(), "#dinner"));
+        events.add(new Event(categories.get(0), new Date(), new Date(), "#pwr"));
+        events.add(new Event(categories.get(0), new Date(), new Date(), "#youtube"));
+        events.add(new Event(categories.get(2), new Date(), new Date(), "#dinner"));
+        events.add(new Event(categories.get(1), new Date(), new Date(), "#pwr"));
 
-        //setContentView(R.layout.recycler_view);
+
+
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+        viewPager.setCurrentItem(4);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
 
         RecyclerView rv;
         rv=(RecyclerView)findViewById(R.id.rv);
@@ -66,9 +80,22 @@ public class MainActivity extends AppCompatActivity {
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
 
-        RVAdapter adapter = new RVAdapter(activities);
-        rv.setAdapter(adapter);
+        RVAdapter rv_adapter = new RVAdapter(events);
+        rv.setAdapter(rv_adapter);
 
+        PagerAdapter p_adapter = new PagerAdapter() {
+            @Override
+            public int getCount() {
+                return 0;
+            }
+
+            @Override
+            public boolean isViewFromObject(View view, Object object) {
+                return false;
+            }
+        };
+
+        viewPager.setAdapter(p_adapter);
 
     }
 
@@ -107,5 +134,53 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initalizeData(){
+
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new DayTab(), "21/02");
+        adapter.addFrag(new DayTab(), "22/02");
+        adapter.addFrag(new DayTab(), "23/02");
+        adapter.addFrag(new DayTab(), "YESTERDAY");
+        adapter.addFrag(new DayTab(), "TODAY");
+        adapter.addFrag(new DayTab(), "TOMORROW");
+        adapter.addFrag(new DayTab(), "27/02");
+        adapter.addFrag(new DayTab(), "28/02");
+        adapter.addFrag(new DayTab(), "29/02");
+        adapter.addFrag(new DayTab(), "30/02");
+        viewPager.setAdapter(adapter);
+    }
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 }
